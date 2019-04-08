@@ -35,7 +35,9 @@
         <div class="card-body">
           <div class="row">
             <div class="col-lg-6">
-              <img src="{{this.imgUrl}}" class="border border-dark" style="max-width: 100%">
+              <a href={{this.url}}>
+                <img src="{{this.imgUrl}}" class="border border-dark" style="max-width: 100%">
+              </a>
             </div>
             <div class="col-lg-6">
               <p class="card-text">{{this.summary}}</p>
@@ -51,21 +53,29 @@
         </div>
         <div class="card-body">
           <p class="card-text">{{this.text}}
-            <button class="btn btn-light float-right delete-btn" data-id="{{this._id}}">Delete</button>
+            <button class="btn btn-light btn-sm float-right delete-btn" data-id="{{this._id}}"><i
+                class="fas fa-trash"></i></button>
           </p>
-          
+
         </div>
       </div>
       <br>
       {{/each}}
       <br>
+
       <form>
-        <div class="form-group">
-          <input type="text" class="form-control" id="comment-input" 
-            placeholder="Add a comment">
+        <div class="form-row">
+          <div class="col-lg-11">
+            <div class="form-group">
+              <input type="text" class="form-control border-dark" id="comment-input" placeholder="Add a comment">
+            </div>
+          </div>
+          <div class="col-lg-1">
+            <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Submit</button>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary float-right" id="submit-btn">Submit</button>
       </form>
+      <br>
     </div>
   </div>
 </div>
