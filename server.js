@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+const db = require("./models");
+
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -14,35 +16,69 @@ app.use(express.json());
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-let articles = [];
+mongoose.connect("mongodb://localhost/mongo_scraper", { useNewUrlParser: true });
 
-const scrapeArticles = () => {
-  axios.get("https://www.thescoreesports.com/home").then(res => {
-    const $ = cheerio.load(res.data);
-    const results = [];
+app.get("/", (req, res) => {
+  db.Article.find({}).limit(10)
+    .then(dbArticles => {
+      res.render("index", { articles: dbArticles });
+    })
+    .catch(err => {
+      console.log(err.message);
+    });
+});
+
+app.get("/articles/:id", (req, res) => {
+  db.Article.findOne({ _id: req.params.id })
+    .populate("comments")
+    .then(dbArticle => {
+      res.render("singleArticle", dbArticle);
+    })
+    .catch(err => {
+      console.log(err.message);
+      res.send("404");
+    });
+});
+
+app.post("/comment/:id", (req, res) => {
+  db.Comment.create(req.body)
+    .then(dbComment => {
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { comments: dbComment._id } }, { new: true });
+    })
+    .then(dbArticle => {
+      res.json(dbArticle);
+    })
+    .catch(err => {
+      res.send(err);
+    });
+});
+
+app.delete("/comment/:id", (req, res) => {
+  db.Comment.remove({ _id: req.params.id })
+});
+
+app.post("/scrape", (req, res) => {
+  axios.get("https://www.thescoreesports.com/home").then(results => {
+    const $ = cheerio.load(results.data);
 
     // Scrape articles
     $("[class*='NewsCard__container']").each((i, element) => {
       const headline = $(element).find("[class*='NewsCard__title']").text();
       const summary = $(element).find("[class*='NewsCard__content']").text();
       const url = "https://www.thescoreesports.com" + $(element).find("a").attr("href");
-      const img = $(element).find("[class*='NewsCard__featureImage']").find("img").attr("src");
+      const imgUrl = $(element).find("[class*='NewsCard__featureImage']").find("img").attr("src");
 
-      results.push({
-        headline,
-        summary,
-        url,
-        img
-      });
+      db.Article.create({ headline, summary, url, imgUrl })
+        .then(dbArticle => {
+          console.log(dbArticle);
+        })
+        .catch(err => {
+          console.log(err.message);
+        });
     });
-    articles = results;
+
+    res.send("articles scraped");
   });
-};
-
-scrapeArticles();
-
-app.get("/", (req, res) => {
-  res.render("index", { articles: articles });
 });
 
 app.listen(PORT, () => {
