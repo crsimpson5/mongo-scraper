@@ -4,6 +4,7 @@ $(document).on("click", "#scrape-btn", function() {
     url: "/scrape"
   })
     .then(function(data) {
+      location.reload();
     });
 });
 

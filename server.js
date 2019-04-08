@@ -20,7 +20,7 @@ app.set("view engine", "handlebars");
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Display home page with articles
-app.get("/home/home", (req, res) => {
+app.get("/", (req, res) => {
   db.Article.find({}).limit(10)
     .then(dbArticles => {
       res.render("index", { articles: dbArticles });
