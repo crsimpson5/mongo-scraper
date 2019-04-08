@@ -4,5 +4,7 @@
   </div>
   <a href={{this.url}}>{{this.headline}}</a>
   <p>{{this.summary}}</p>
-  </ul>
+  {{#each this.comments}}
+    <p>{{this.text}}</p>
+  {{/each}}
 </div>

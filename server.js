@@ -40,7 +40,7 @@ app.get("/articles/:id", (req, res) => {
     });
 });
 
-app.post("/comment/:id", (req, res) => {
+app.post("/articles/:id", (req, res) => {
   db.Comment.create(req.body)
     .then(dbComment => {
       return db.Article.findOneAndUpdate({ _id: req.params.id }, { $push: { comments: dbComment._id } }, { new: true });
@@ -54,7 +54,20 @@ app.post("/comment/:id", (req, res) => {
 });
 
 app.delete("/comment/:id", (req, res) => {
-  db.Comment.remove({ _id: req.params.id })
+  db.Article.update({}, { $pull: { comments: req.params.id } })
+    .then(dbArticle => {
+      db.Comment.deleteOne({ _id: req.params.id })
+        .then(dbComment => {
+          res.json(dbComment);
+        })
+        .catch(err => {
+          res.send(err);
+        });
+    })
+    .catch(err => {
+      res.send(err);
+    });
+
 });
 
 app.post("/scrape", (req, res) => {
