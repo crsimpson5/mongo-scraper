@@ -1,4 +1,4 @@
-# mongo-scraper
+# Mongo Scraper
 
 ### What is this app?
 
