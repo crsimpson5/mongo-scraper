@@ -8,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 const db = require("./models");
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
@@ -16,8 +17,9 @@ app.use(express.json());
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-mongoose.connect("mongodb://localhost/mongo_scraper", { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
+// Display home page with articles
 app.get("/", (req, res) => {
   db.Article.find({}).limit(10)
     .then(dbArticles => {
@@ -25,9 +27,11 @@ app.get("/", (req, res) => {
     })
     .catch(err => {
       console.log(err.message);
+      res.send(err);
     });
 });
 
+// Display single article with comments
 app.get("/articles/:id", (req, res) => {
   db.Article.findOne({ _id: req.params.id })
     .populate("comments")
@@ -40,6 +44,7 @@ app.get("/articles/:id", (req, res) => {
     });
 });
 
+// Create comment
 app.post("/articles/:id", (req, res) => {
   db.Comment.create(req.body)
     .then(dbComment => {
@@ -53,6 +58,7 @@ app.post("/articles/:id", (req, res) => {
     });
 });
 
+// Delete comment
 app.delete("/comment/:id", (req, res) => {
   db.Article.update({}, { $pull: { comments: req.params.id } })
     .then(dbArticle => {
@@ -70,11 +76,11 @@ app.delete("/comment/:id", (req, res) => {
 
 });
 
+// Scrape articles
 app.post("/scrape", (req, res) => {
   axios.get("https://www.thescoreesports.com/home").then(results => {
     const $ = cheerio.load(results.data);
 
-    // Scrape articles
     $("[class*='NewsCard__container']").each((i, element) => {
       const headline = $(element).find("[class*='NewsCard__title']").text();
       const summary = $(element).find("[class*='NewsCard__content']").text();
