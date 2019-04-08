@@ -19,7 +19,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <button class="btn btn-primary">Scrape Articles</a>
+        <button class="btn btn-primary" id="scrape-btn">Scrape Articles</a>
       </li>
     </ul>
   </div>
@@ -31,12 +31,21 @@
       <h1 class="display-4">Mongo Scraper</h1>
       <p class="lead">theScore Esports Edition</p>
     </div>
-    
-      {{#each articles}}
-        <a href={{this.url}}>{{this.headline}}</a>
-        <p>{{this.summary}}</p>
 
-        <button>View comments</button>
+    <div class="p-5">
+      {{#each articles}}
+      <div class="card border-dark">
+        <div class="card-header bg-dark">
+          
+        </div>
+        <div class="card-body">
+          <h5 class="card-title"><a href={{this.url}}>{{this.headline}}</a></h5>
+          <p class="card-text">{{this.summary}}</p>
+          <a href="articles/{{this._id}}" class="btn btn-primary">View comments</a>
+        </div>
+      </div>
+      <br>
       {{/each}}
+    </div>
   </div>
 </div>

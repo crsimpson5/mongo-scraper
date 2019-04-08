@@ -20,7 +20,7 @@ app.set("view engine", "handlebars");
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Display home page with articles
-app.get("/", (req, res) => {
+app.get("/home/home", (req, res) => {
   db.Article.find({}).limit(10)
     .then(dbArticles => {
       res.render("index", { articles: dbArticles });
@@ -77,7 +77,7 @@ app.delete("/comment/:id", (req, res) => {
 });
 
 // Scrape articles
-app.post("/scrape", (req, res) => {
+app.get("/scrape", (req, res) => {
   axios.get("https://www.thescoreesports.com/home").then(results => {
     const $ = cheerio.load(results.data);
 
