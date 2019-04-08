@@ -32,7 +32,7 @@
       <p class="lead">theScore Esports Edition</p>
     </div>
 
-    <div class="p-5">
+    <div class="px-5">
       {{#each articles}}
       <div class="card border-dark">
         <div class="card-header bg-dark">
@@ -41,7 +41,7 @@
         <div class="card-body">
           <h5 class="card-title"><a href={{this.url}}>{{this.headline}}</a></h5>
           <p class="card-text">{{this.summary}}</p>
-          <a href="articles/{{this._id}}" class="btn btn-primary">View comments</a>
+          <a href="articles/{{this._id}}" class="btn btn-primary float-right">View comments</a>
         </div>
       </div>
       <br>

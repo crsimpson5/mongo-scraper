@@ -27,18 +27,20 @@
 
 <div class="container">
   <div class="jumbotron jumbotron-fluid">
-    <div class="jumbotron text-center">
-      <h1 class="display-4">Mongo Scraper</h1>
-      <p class="lead">theScore Esports Edition</p>
-    </div>
-
-    <div class="p-5">
+    <div class="px-5">
       <div class="card border-dark" id="article" data-id="{{this._id}}">
         <div class="card-header bg-dark">
+          <h3><a href={{this.url}} class="text-white">{{this.headline}}</a></h3>
         </div>
         <div class="card-body">
-          <h5 class="card-title"><a href={{this.url}}>{{this.headline}}</a></h5>
-          <p class="card-text">{{this.summary}}</p>
+          <div class="row">
+            <div class="col-lg-6">
+              <img src="{{this.imgUrl}}" class="border border-dark" style="max-width: 100%">
+            </div>
+            <div class="col-lg-6">
+              <p class="card-text">{{this.summary}}</p>
+            </div>
+          </div>
         </div>
       </div>
       <br>
@@ -49,7 +51,7 @@
         </div>
         <div class="card-body">
           <p class="card-text">{{this.text}}
-            <button class="btn btn-danger float-right delete-btn" data-id="{{this._id}}">Delete</button>
+            <button class="btn btn-light float-right delete-btn" data-id="{{this._id}}">Delete</button>
           </p>
           
         </div>
@@ -62,7 +64,7 @@
           <input type="text" class="form-control" id="comment-input" 
             placeholder="Add a comment">
         </div>
-        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+        <button type="submit" class="btn btn-primary float-right" id="submit-btn">Submit</button>
       </form>
     </div>
   </div>
