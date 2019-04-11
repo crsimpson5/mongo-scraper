@@ -21,7 +21,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Display home page with articles
 app.get("/", (req, res) => {
-  db.Article.find({}).limit(10)
+  db.Article.find({}).sort({ dateAdded: 1 }).limit(10)
     .then(dbArticles => {
       res.render("index", { articles: dbArticles });
     })
@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 // Display single article with comments
 app.get("/articles/:id", (req, res) => {
   db.Article.findOne({ _id: req.params.id })
-    .populate("comments")
+    .populate({ path: "comments", options: { sort: { dateAdded: 1 } } })
     .then(dbArticle => {
       res.render("singleArticle", dbArticle);
     })

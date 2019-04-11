@@ -19,6 +19,10 @@ const ArticleSchema = new Schema({
   imgUrl: {
     type: String
   },
+  dateAdded: {
+    type: Date,
+    default: Date.now
+  },
   comments: [
     {
       type: Schema.Types.ObjectId,

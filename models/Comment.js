@@ -6,7 +6,11 @@ const CommentSchema = new Schema({
   text: {
     type: String,
     required: true
-  }
+  },
+  dateAdded: {
+    type: Date,
+    default: Date.now
+  },
 });
 
 const Comment = mongoose.model("Comment", CommentSchema);
