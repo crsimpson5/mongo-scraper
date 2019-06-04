@@ -21,7 +21,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 // Display home page with articles
 app.get("/", (req, res) => {
-  db.Article.find({}).sort({ dateAdded: 1 }).limit(10)
+  db.Article.find({}).sort({ dateAdded: -1 }).limit(10)
     .then(dbArticles => {
       res.render("index", { articles: dbArticles });
     })
@@ -90,13 +90,13 @@ app.get("/scrape", (req, res) => {
       db.Article.create({ headline, summary, url, imgUrl })
         .then(dbArticle => {
           console.log(dbArticle);
+          res.send("articles scraped");
         })
         .catch(err => {
           console.log(err.message);
+          res.send("error");
         });
     });
-
-    res.send("articles scraped");
   });
 });
 
